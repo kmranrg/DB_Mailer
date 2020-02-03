@@ -10,7 +10,7 @@ from tkinter import messagebox
 db = sqlite3.connect("Student_DB.sqlite")
 root = Tk()
 root.title("DB Mailer")
-root.geometry("275x320")
+root.geometry("280x320")
 
 # raising an exception
 class wrongSub(Exception):
@@ -28,7 +28,7 @@ def createTable():
     # creating table
     try:
         db.execute("""create table
-               student(rno integer,name text,sub1 integer,
+               student(rno integer PRIMARY KEY,name text,sub1 integer,
                sub2 integer,sub3 integer,perc integer)""")
         Label(root,text = "Table Created").grid(column=1,row=15)
     except:
@@ -65,6 +65,9 @@ def addData():
         messagebox.showinfo("Data", "Enter subject marks b/w 0-100")
     except wrongName:
         messagebox.showinfo("Data","Incorrect Name")
+    # avoiding same roll no entry
+    except sqlite3.IntegrityError:
+        messagebox.showinfo("Data", "Roll no. already exists")
     except:
         messagebox.showinfo("Data", "Invalid Input")
 
@@ -158,15 +161,15 @@ Label(root,text = "Name:").grid(column=0,row=2)
 nm = Entry(root)
 nm.grid(column=1,row=2)
 
-Label(root,text = "Suject 1 Marks(out of 100):").grid(column=0,row=4)
+Label(root,text = "Subject 1 Marks(out of 100):").grid(column=0,row=4)
 s1 = Entry(root)
 s1.grid(column=1,row=4)
 
-Label(root,text = "Suject 2 Marks(out of 100):").grid(column=0,row=6)
+Label(root,text = "Subject 2 Marks(out of 100):").grid(column=0,row=6)
 s2 = Entry(root)
 s2.grid(column=1,row=6)
 
-Label(root,text = "Suject 3 Marks(out of 100):").grid(column=0,row=8)
+Label(root,text = "Subject 3 Marks(out of 100):").grid(column=0,row=8)
 s3 = Entry(root)
 s3.grid(column=1,row=8)
 

@@ -32,7 +32,7 @@ def createTable():
                sub2 integer,sub3 integer,perc integer)""")
         Label(root,text = "Table Created").grid(column=1,row=15)
     except:
-        messagebox.showinfo("Table", "Table already exists")
+        messagebox.showinfo("DB Mailer", "Table already exists")
 
 def addData():
     list1 =  []
@@ -62,14 +62,14 @@ def addData():
         db.commit()
         Label(root,text = "Data Stored").grid(column=1,row=16)
     except wrongSub:
-        messagebox.showinfo("Data", "Enter subject marks b/w 0-100")
+        messagebox.showinfo("DB Mailer", "Enter subject marks b/w 0-100")
     except wrongName:
-        messagebox.showinfo("Data","Incorrect Name")
+        messagebox.showinfo("DB Mailer","Incorrect Name")
     # avoiding same roll no entry
     except sqlite3.IntegrityError:
-        messagebox.showinfo("Data", "Roll no. already exists")
+        messagebox.showinfo("DB Mailer", "Roll no. already exists")
     except:
-        messagebox.showinfo("Data", "Invalid Input")
+        messagebox.showinfo("DB Mailer", "Invalid Input")
 
 
 def perc():
@@ -81,7 +81,7 @@ def perc():
         Label(root,text = "%.2f"% list1[0][5]).grid(column=1,row=17)
         cursor.close()
     except:
-        messagebox.showinfo("Percentage", "Roll no. not found")
+        messagebox.showinfo("DB Mailer", "Roll no. not found")
     
 def genReport():
     title = ["roll_no","name","sub_1","sub_2","sub_3","per %"]
@@ -119,19 +119,19 @@ def sendReport():
         elif not(re.search("\S+@\S+com",receiver)):
             raise wrongEmailBasic
     except IndexError:
-        messagebox.showinfo("Mail","Roll no. not found")
+        messagebox.showinfo("DB Mailer","Roll no. not found")
     except wrongEmailNull:
-        messagebox.showinfo("Mail","Receiver mail-id is empty")
+        messagebox.showinfo("DB Mailer","Receiver mail-id is empty")
     except wrongEmailBasic:
-        messagebox.showinfo("Mail","Missing '@' in email")
+        messagebox.showinfo("DB Mailer","Missing '@' in email")
     except:
-        messagebox.showinfo("Mail","Wrong roll no. or receiver mail")
+        messagebox.showinfo("DB Mailer","Wrong roll no. or receiver mail")
     try:
         # username and password
         username = sender
         password = open("pwd.txt").read()
     except:
-        messagebox.showinfo("Mail","Unable to read Password")
+        messagebox.showinfo("DB Mailer","Unable to read Password")
     try:
         str1 = str(list1)
         # creating the mail body
@@ -150,7 +150,7 @@ def sendReport():
         server.sendmail(sender,receiver,message.as_string())
         Label(root,text = "Mail Sent").grid(column=1,row=19)
     except:
-        messagebox.showinfo("Mail","Server Error")
+        messagebox.showinfo("DB Mailer","Server Error")
     
 # taking the input values
 Label(root,text = "Roll No:").grid(column=0,row=0)

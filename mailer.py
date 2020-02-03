@@ -10,7 +10,7 @@ from tkinter import messagebox
 db = sqlite3.connect("Student_DB.sqlite")
 root = Tk()
 root.title("DB Mailer")
-root.geometry("275x320")
+root.geometry("280x320")
 
 # raising an exception
 class wrongSub(Exception):
@@ -28,11 +28,11 @@ def createTable():
     # creating table
     try:
         db.execute("""create table
-               student(rno integer,name text,sub1 integer,
+               student(rno integer PRIMARY KEY,name text,sub1 integer,
                sub2 integer,sub3 integer,perc integer)""")
         Label(root,text = "Table Created").grid(column=1,row=15)
     except:
-        messagebox.showinfo("Table", "Table already exists")
+        messagebox.showinfo("DB Mailer", "Table already exists")
 
 def addData():
     list1 =  []
@@ -62,11 +62,14 @@ def addData():
         db.commit()
         Label(root,text = "Data Stored").grid(column=1,row=16)
     except wrongSub:
-        messagebox.showinfo("Data", "Enter subject marks b/w 0-100")
+        messagebox.showinfo("DB Mailer", "Enter subject marks b/w 0-100")
     except wrongName:
-        messagebox.showinfo("Data","Incorrect Name")
+        messagebox.showinfo("DB Mailer","Incorrect Name")
+    # avoiding same roll no entry
+    except sqlite3.IntegrityError:
+        messagebox.showinfo("DB Mailer", "Roll no. already exists")
     except:
-        messagebox.showinfo("Data", "Invalid Input")
+        messagebox.showinfo("DB Mailer", "Invalid Input")
 
 
 def perc():
@@ -78,7 +81,7 @@ def perc():
         Label(root,text = "%.2f"% list1[0][5]).grid(column=1,row=17)
         cursor.close()
     except:
-        messagebox.showinfo("Percentage", "Roll no. not found")
+        messagebox.showinfo("DB Mailer", "Roll no. not found")
     
 def genReport():
     title = ["roll_no","name","sub_1","sub_2","sub_3","per %"]
@@ -116,19 +119,19 @@ def sendReport():
         elif not(re.search("\S+@\S+com",receiver)):
             raise wrongEmailBasic
     except IndexError:
-        messagebox.showinfo("Mail","Roll no. not found")
+        messagebox.showinfo("DB Mailer","Roll no. not found")
     except wrongEmailNull:
-        messagebox.showinfo("Mail","Receiver mail-id is empty")
+        messagebox.showinfo("DB Mailer","Receiver mail-id is empty")
     except wrongEmailBasic:
-        messagebox.showinfo("Mail","Missing '@' in email")
+        messagebox.showinfo("DB Mailer","Missing '@' in email")
     except:
-        messagebox.showinfo("Mail","Wrong roll no. or receiver mail")
+        messagebox.showinfo("DB Mailer","Wrong roll no. or receiver mail")
     try:
         # username and password
         username = sender
         password = open("pwd.txt").read()
     except:
-        messagebox.showinfo("Mail","Unable to read Password")
+        messagebox.showinfo("DB Mailer","Unable to read Password")
     try:
         str1 = str(list1)
         # creating the mail body
@@ -147,7 +150,7 @@ def sendReport():
         server.sendmail(sender,receiver,message.as_string())
         Label(root,text = "Mail Sent").grid(column=1,row=19)
     except:
-        messagebox.showinfo("Mail","Server Error")
+        messagebox.showinfo("DB Mailer","Server Error")
     
 # taking the input values
 Label(root,text = "Roll No:").grid(column=0,row=0)
@@ -158,15 +161,15 @@ Label(root,text = "Name:").grid(column=0,row=2)
 nm = Entry(root)
 nm.grid(column=1,row=2)
 
-Label(root,text = "Suject 1 Marks(out of 100):").grid(column=0,row=4)
+Label(root,text = "Subject 1 Marks(out of 100):").grid(column=0,row=4)
 s1 = Entry(root)
 s1.grid(column=1,row=4)
 
-Label(root,text = "Suject 2 Marks(out of 100):").grid(column=0,row=6)
+Label(root,text = "Subject 2 Marks(out of 100):").grid(column=0,row=6)
 s2 = Entry(root)
 s2.grid(column=1,row=6)
 
-Label(root,text = "Suject 3 Marks(out of 100):").grid(column=0,row=8)
+Label(root,text = "Subject 3 Marks(out of 100):").grid(column=0,row=8)
 s3 = Entry(root)
 s3.grid(column=1,row=8)
 
